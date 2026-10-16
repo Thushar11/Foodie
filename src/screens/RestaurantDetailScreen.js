@@ -3,13 +3,16 @@ import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Animated } f
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 import { CartContext } from '../context/CartContext';
+import { useToast } from '../components/Toast';
 
 export default function RestaurantDetailScreen({ route, navigation }) {
   const { restaurant } = route.params;
   const { addToCart } = useContext(CartContext);
+  const [toast, showToast] = useToast();
 
   const handleAddToCart = (item) => {
     addToCart(item, restaurant.id);
+    showToast(`${item.name} added to cart`);
   };
 
   const renderMenuItem = ({ item }) => (
@@ -86,6 +89,7 @@ export default function RestaurantDetailScreen({ route, navigation }) {
           contentContainerStyle={styles.menuList}
         />
       </View>
+      {toast}
     </View>
   );
 }

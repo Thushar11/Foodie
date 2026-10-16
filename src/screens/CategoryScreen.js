@@ -5,10 +5,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 import { RESTAURANTS } from '../data/dummyData';
 import { CartContext } from '../context/CartContext';
+import { useToast } from '../components/Toast';
 
 export default function CategoryScreen({ route, navigation }) {
   const { category } = route.params;
   const { addToCart } = useContext(CartContext);
+  const [toast, showToast] = useToast();
+
+  const handleAddToCart = (item) => {
+    addToCart(item, item.restaurantId);
+    showToast(`${item.name} added to cart`);
+  };
 
   // Find all foods across all restaurants that match the selected category
   const categoryItems = [];
@@ -39,7 +46,7 @@ export default function CategoryScreen({ route, navigation }) {
       </View>
       <TouchableOpacity 
         style={styles.addButton}
-        onPress={() => addToCart(item, item.restaurantId)}
+        onPress={() => handleAddToCart(item)}
       >
         <Ionicons name="add" size={24} color={theme.colors.white} />
       </TouchableOpacity>
@@ -70,6 +77,7 @@ export default function CategoryScreen({ route, navigation }) {
           showsVerticalScrollIndicator={false}
         />
       )}
+      {toast}
     </SafeAreaView>
   );
 }
